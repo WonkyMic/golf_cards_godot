@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://e6ownkyurw27"]
+
+[ext_resource type="Script" path="res://DeckAndDiscard.gd" id="1_55xqn"]
+[ext_resource type="PackedScene" uid="uid://bnpv673k3jiqg" path="res://clickable_card.tscn" id="2_txvr0"]
+
+[node name="DeckAndDiscard" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_55xqn")
+
+[node name="DeckDraw" type="Button" parent="."]
+layout_mode = 2
+text = "Draw"
+
+[node name="Deck" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ClickableCard" parent="Deck" instance=ExtResource("2_txvr0")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Deck"]
+layout_mode = 2
+text = "Deck"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Discard" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ClickableCard" parent="Discard" instance=ExtResource("2_txvr0")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Discard"]
+layout_mode = 2
+text = "Discard
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DiscardDraw" type="Button" parent="."]
+layout_mode = 2
+text = "Draw"
+
+[connection signal="pressed" from="DeckDraw" to="." method="_on_deck_draw_pressed"]
+[connection signal="card_flipped" from="Discard/ClickableCard" to="." method="_on_discard_card_flipped"]
+[connection signal="pressed" from="DiscardDraw" to="." method="_on_discard_draw_pressed"]

@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://bhlt65yso7yd2"]
+
+[ext_resource type="Script" path="res://CardRect.gd" id="1_mq11u"]
+
+[node name="Info" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="InfoContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StatusContainer" type="HBoxContainer" parent="InfoContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="InfoContainer/StatusContainer"]
+layout_mode = 2
+text = "Status:"
+
+[node name="StatusValueLabel" type="Label" parent="InfoContainer/StatusContainer"]
+layout_mode = 2
+text = "value"
+
+[node name="TurnContainer" type="HBoxContainer" parent="InfoContainer"]
+layout_mode = 2
+
+[node name="TurnLabel" type="Label" parent="InfoContainer/TurnContainer"]
+layout_mode = 2
+text = "Turn:"
+
+[node name="TurnValueLabel" type="Label" parent="InfoContainer/TurnContainer"]
+layout_mode = 2
+text = "value"
+
+[node name="CardRect" type="TextureRect" parent="InfoContainer"]
+layout_mode = 2
+expand_mode = 5
+script = ExtResource("1_mq11u")

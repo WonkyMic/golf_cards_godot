@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfuld6fnl6oat"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_jkac5"]
+[ext_resource type="PackedScene" uid="uid://cjr55wsdv0nng" path="res://player.tscn" id="2_2035l"]
+[ext_resource type="PackedScene" uid="uid://e6ownkyurw27" path="res://deck_and_discard.tscn" id="2_rxxxg"]
+[ext_resource type="PackedScene" uid="uid://bhlt65yso7yd2" path="res://info.tscn" id="4_p0s2j"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_jkac5")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
+
+[node name="GameLabel" type="Label" parent="."]
+offset_left = -376.0
+offset_top = -208.0
+offset_right = -297.0
+offset_bottom = -150.0
+theme_override_font_sizes/font_size = 40
+text = "Golf"
+
+[node name="DeckAndDiscard" parent="." instance=ExtResource("2_rxxxg")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -47.0
+offset_right = 120.0
+offset_bottom = 47.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1" parent="." instance=ExtResource("2_2035l")]
+position = Vector2(-104, 56)
+
+[node name="Player2" parent="." instance=ExtResource("2_2035l")]
+position = Vector2(-104, -216)
+
+[node name="Info" parent="." instance=ExtResource("4_p0s2j")]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 208.0
+offset_top = -208.0
+offset_right = 248.0
+offset_bottom = -168.0
+grow_horizontal = 0
+
+[connection signal="discard_selected" from="DeckAndDiscard" to="." method="_on_discard_selected"]
+[connection signal="draw_from_deck" from="DeckAndDiscard" to="." method="_on_draw_from_deck"]
+[connection signal="draw_from_discard" from="DeckAndDiscard" to="." method="_on_draw_from_discard"]
+[connection signal="card_interacted" from="Player1" to="." method="_on_player_1_card_interacted"]
+[connection signal="end_game" from="Player1" to="." method="_on_player_1_end_game"]
+[connection signal="card_interacted" from="Player2" to="." method="_on_player_2_card_interacted"]
+[connection signal="end_game" from="Player2" to="." method="_on_player_2_end_game"]
