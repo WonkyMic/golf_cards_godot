@@ -33,6 +33,6 @@ func flip_texture():
 func _on_button_pressed():
 #	if get_tree().current_scene.game_status == "DISCARD":
 	if get_parent().name != "Deck": # && get_parent().name != "Discard":
-		flip_texture()		
+		flip_texture()
 		ap.play("flip")
 		card_flipped.emit(card_name)

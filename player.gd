@@ -47,16 +47,10 @@ func calculate_player_score():
 	var card6 = $CardContainer/CardRow2/Card6.card_name.right(-1)
 
 	# First Column
-#	print("-- First Column --")
-#	print("Card1 :: " + card1 + " // Card4 :: " + card4)
 	score += _score_column(card1, card4)
 	# Second Column
-#	print("-- Second Column --")
-#	print("Card2 :: " + card2 + " // Card5 :: " + card5)
 	score += _score_column(card2, card5)
 	# Third Column
-#	print("-- Third Column --")
-#	print("Card3 :: " + card3 + " // Card6 :: " + card6)
 	score += _score_column(card3, card6)
 	return score
 
@@ -76,11 +70,6 @@ func set_starting_hand(player_cards):
 	$CardContainer/CardRow2/Card5.set_card_value(hand_of_cards[4])
 	$CardContainer/CardRow2/Card6.set_card_value(hand_of_cards[5])
 
-func bool_to_string(boo):
-	return "true" if boo else "false"
-		
-	
-# TODO :: is_face_up appears to have a race condition when checking here
 func check_end_game():
 	var is_end_game = false
 	

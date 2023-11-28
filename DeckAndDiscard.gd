@@ -30,6 +30,8 @@ func deal_cards():
 	print("-- setting player2 --")
 	player2.set_starting_hand(player2_cards)
 	
+	discard_card(_new_card())
+	
 func discard_card(card):
 	discard_deck.append(card)
 
