@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfkb5j8c0hxdi"]
+[gd_scene load_steps=3 format=3 uid="uid://tk8uscsfeqvn"]
 
 [ext_resource type="Script" path="res://chat_panel.gd" id="1_utpp1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b6ebs"]
 properties/0/path = NodePath("GridContainer/Panel/RichTextLabel:text")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 
 [node name="ChatPanel" type="Control"]
 custom_minimum_size = Vector2(76.24, 154.99)
