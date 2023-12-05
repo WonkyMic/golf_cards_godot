@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfkb5j8c0hxdi"]
+
+[ext_resource type="Script" path="res://chat_panel.gd" id="1_utpp1"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b6ebs"]
+properties/0/path = NodePath("GridContainer/Panel/RichTextLabel:text")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="ChatPanel" type="Control"]
+custom_minimum_size = Vector2(76.24, 154.99)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -117.5
+offset_top = -158.5
+offset_right = 117.5
+offset_bottom = 158.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_utpp1")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GridContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+scroll_following = true
+context_menu_enabled = true
+selection_enabled = true
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="SendButton" type="Button" parent="GridContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+tooltip_text = "Send Message"
+text = "📤"
+
+[node name="TextEdit" type="TextEdit" parent="GridContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Press T to focus
+SHFT+Enter to Send"
+theme_override_font_sizes/font_size = 14
+placeholder_text = "hover for tips..."
+wrap_mode = 1
+scroll_smooth = true
+scroll_fit_content_height = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_b6ebs")
+
+[connection signal="pressed" from="GridContainer/GridContainer/SendButton" to="." method="_on_send_button_pressed"]
