@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bfuld6fnl6oat"]
+[gd_scene load_steps=6 format=3 uid="uid://bfuld6fnl6oat"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_jkac5"]
 [ext_resource type="PackedScene" uid="uid://cjr55wsdv0nng" path="res://player.tscn" id="2_2035l"]
 [ext_resource type="PackedScene" uid="uid://e6ownkyurw27" path="res://deck_and_discard.tscn" id="2_rxxxg"]
 [ext_resource type="PackedScene" uid="uid://bhlt65yso7yd2" path="res://info.tscn" id="4_p0s2j"]
+[ext_resource type="PackedScene" uid="uid://cfkb5j8c0hxdi" path="res://chat_panel.tscn" id="5_qxobr"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_jkac5")
@@ -47,6 +48,12 @@ offset_top = -208.0
 offset_right = 248.0
 offset_bottom = -168.0
 grow_horizontal = 0
+
+[node name="ChatPanel" parent="." instance=ExtResource("5_qxobr")]
+offset_left = -378.0
+offset_top = -159.0
+offset_right = -190.0
+offset_bottom = 211.0
 
 [connection signal="discard_selected" from="DeckAndDiscard" to="." method="_on_discard_selected"]
 [connection signal="draw_from_deck" from="DeckAndDiscard" to="." method="_on_draw_from_deck"]
