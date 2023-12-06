@@ -13,10 +13,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	# Exact button required, so ctrl+enter won't trigger a send but will add a new line.
-	if Input.is_action_pressed("send_message", true):
+	if Input.is_action_just_pressed("send_message"):
 		send_button.emit_signal("pressed")
-	if Input.is_action_pressed("type_focus"):
+	if Input.is_action_just_pressed("type_focus"):
 		text_panel.grab_focus()
 
 
