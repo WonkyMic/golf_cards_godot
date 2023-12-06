@@ -1,9 +1,9 @@
 extends Control
 
-const MAXIMIZE_ICON := "🗖"
-const MAXIMIZE_TEXT := "Expand Chat Panel"
-const MINIMIZE_ICON := "🗕"
-const MINIMIZE_TEXT := "Collapse to Side Panel"
+const MAXIMIZE_ICON := "🗞️"
+const MAXIMIZE_TEXT := "Unroll to Fullscreen"
+const MINIMIZE_ICON := "📰"
+const MINIMIZE_TEXT := "Roll into Side Panel"
 
 var global: Global
 
@@ -48,7 +48,7 @@ func _on_resize_button_pressed() -> void:
 		set_size(default_size)
 		set_position(default_position)
 		resize_button.text = MAXIMIZE_ICON
-		resize_button.tooltip_text = MINIMIZE_TEXT
+		resize_button.tooltip_text = MAXIMIZE_TEXT
 
 func get_window_size() -> Vector2:
 	var window_width: float = ProjectSettings.get_setting("display/window/size/viewport_width")

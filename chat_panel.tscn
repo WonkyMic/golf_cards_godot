@@ -53,9 +53,9 @@ columns = 2
 [node name="ResizeButton" type="Button" parent="GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-tooltip_text = "Expand Chat Panel"
+tooltip_text = "Unroll to Fullscreen"
 toggle_mode = true
-text = "🗖"
+text = "🗞️"
 
 [node name="TextEdit" type="TextEdit" parent="GridContainer/GridContainer"]
 layout_mode = 2
