@@ -4,13 +4,16 @@ const MAXIMIZE_ICON := "🗞️"
 const MAXIMIZE_TEXT := "Unroll to Fullscreen"
 const MINIMIZE_ICON := "📰"
 const MINIMIZE_TEXT := "Roll into Side Panel"
+const DARKENED_MODULATE := Color(0,0,0)
 
 var global: Global
 
 var message_panel: RichTextLabel
+var message_background: Panel
 var text_panel: TextEdit
 var resize_button: Button
 
+var default_background_modulate: Color
 var default_size: Vector2
 var default_position: Vector2
 
@@ -19,9 +22,11 @@ var default_position: Vector2
 func _ready() -> void:
 	global = get_node("/root/Global")
 	message_panel = $GridContainer/Panel/RichTextLabel
+	message_background = $GridContainer/Panel
 	text_panel = $GridContainer/GridContainer/TextEdit
 	resize_button = $GridContainer/GridContainer/ResizeButton
 	
+	default_background_modulate = message_background.get_self_modulate()
 	default_size = size
 	default_position = position
 	
@@ -44,11 +49,13 @@ func _on_resize_button_pressed() -> void:
 		set_position(window_size / -2)
 		resize_button.text = MINIMIZE_ICON
 		resize_button.tooltip_text = MINIMIZE_TEXT
+		message_background.set_self_modulate(DARKENED_MODULATE)
 	else:
 		set_size(default_size)
 		set_position(default_position)
 		resize_button.text = MAXIMIZE_ICON
 		resize_button.tooltip_text = MAXIMIZE_TEXT
+		message_background.set_self_modulate(default_background_modulate)
 
 func get_window_size() -> Vector2:
 	var window_width: float = ProjectSettings.get_setting("display/window/size/viewport_width")
