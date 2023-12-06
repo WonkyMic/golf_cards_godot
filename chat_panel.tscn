@@ -8,19 +8,15 @@ properties/0/spawn = true
 properties/0/replication_mode = 2
 
 [node name="ChatPanel" type="Control"]
-custom_minimum_size = Vector2(76.24, 154.99)
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -117.5
-offset_top = -158.5
-offset_right = 117.5
-offset_bottom = 158.5
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -401.0
+offset_right = 248.0
+offset_bottom = -8.0
+grow_vertical = 0
 script = ExtResource("1_utpp1")
 
 [node name="GridContainer" type="GridContainer" parent="."]
@@ -54,11 +50,12 @@ selection_enabled = true
 layout_mode = 2
 columns = 2
 
-[node name="SendButton" type="Button" parent="GridContainer/GridContainer"]
+[node name="ResizeButton" type="Button" parent="GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
-tooltip_text = "Send Message"
-text = "📤"
+tooltip_text = "Expand Chat Panel"
+toggle_mode = true
+text = "🗖"
 
 [node name="TextEdit" type="TextEdit" parent="GridContainer/GridContainer"]
 layout_mode = 2
@@ -74,4 +71,4 @@ scroll_fit_content_height = true
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_b6ebs")
 
-[connection signal="pressed" from="GridContainer/GridContainer/SendButton" to="." method="_on_send_button_pressed"]
+[connection signal="pressed" from="GridContainer/GridContainer/ResizeButton" to="." method="_on_resize_button_pressed"]
