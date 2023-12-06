@@ -2,9 +2,12 @@ extends Control
 
 const PORT = 4433
 
+var global: Global
+
 func _ready():
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
+	global = get_node("/root/Global")
 
 	# Automatically start the server in headless mode.
 	if DisplayServer.get_name() == "headless":
@@ -19,6 +22,8 @@ func _on_host_pressed() -> void:
 		OS.alert("Failed to start multiplayer server")
 		return
 	multiplayer.multiplayer_peer = peer
+	
+	global.is_multiplayer = true
 	start_game()
 
 func _on_join_pressed() -> void:
@@ -35,10 +40,12 @@ func _on_join_pressed() -> void:
 		OS.alert("Failed to start multiplayer client")
 		return
 	multiplayer.multiplayer_peer = peer
+	
+	global.is_multiplayer = true
 	start_game()
 
 func _on_hotseat_pressed():
-	# TODO: provide original logic for hotseat (control over both sides)
+	global.is_multiplayer = false
 	get_tree().change_scene_to_file("res://main.tscn")
 
 func _on_options_pressed():

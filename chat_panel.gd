@@ -5,6 +5,8 @@ const MAXIMIZE_TEXT := "Expand Chat Panel"
 const MINIMIZE_ICON := "🗕"
 const MINIMIZE_TEXT := "Collapse to Side Panel"
 
+var global: Global
+
 var message_panel: RichTextLabel
 var text_panel: TextEdit
 var resize_button: Button
@@ -15,12 +17,15 @@ var default_position: Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	global = get_node("/root/Global")
 	message_panel = $GridContainer/Panel/RichTextLabel
 	text_panel = $GridContainer/GridContainer/TextEdit
 	resize_button = $GridContainer/GridContainer/ResizeButton
 	
 	default_size = size
 	default_position = position
+	
+	visible = global.is_multiplayer
 
 
 func _process(delta: float) -> void:
