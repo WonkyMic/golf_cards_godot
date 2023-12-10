@@ -42,6 +42,7 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 2
 theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
 scroll_following = true
 context_menu_enabled = true
 selection_enabled = true
