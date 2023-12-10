@@ -14,7 +14,7 @@ anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = -401.0
-offset_right = 248.0
+offset_right = 196.0
 offset_bottom = -8.0
 grow_vertical = 0
 script = ExtResource("1_utpp1")
@@ -61,10 +61,8 @@ text = "🗞️"
 [node name="TextEdit" type="TextEdit" parent="GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "Press T to focus
-SHFT+Enter to Send"
 theme_override_font_sizes/font_size = 14
-placeholder_text = "hover for tips..."
+placeholder_text = "shift+enter to send"
 wrap_mode = 1
 scroll_smooth = true
 scroll_fit_content_height = true

@@ -42,8 +42,6 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("send_message"):
 		send_message_local()
-	if Input.is_action_just_pressed("type_focus"):
-		text_panel.grab_focus()
 
 
 func _on_resize_button_pressed() -> void:
