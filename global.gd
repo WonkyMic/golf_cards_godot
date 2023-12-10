@@ -1,3 +1,4 @@
 extends Node
 
-var is_multiplayer := false
+var is_multiplayer := true
+var player_name: String
