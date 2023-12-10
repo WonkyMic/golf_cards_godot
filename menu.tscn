@@ -32,14 +32,15 @@ offset_bottom = 68.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MultiplayerButton" type="Button" parent="Choices"]
+[node name="NetworkButton" type="Button" parent="Choices"]
 layout_mode = 2
 toggle_mode = true
-text = "Multiplayer..."
+text = "🌎Network..."
 
 [node name="NameEntry" type="LineEdit" parent="Choices"]
 layout_mode = 2
 placeholder_text = "player name"
+alignment = 1
 
 [node name="ConnectionChoices" type="HBoxContainer" parent="Choices"]
 layout_mode = 2
@@ -48,32 +49,38 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
-text = "Host"
+text = "⚡Host"
 
 [node name="Join" type="Button" parent="Choices/ConnectionChoices"]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
-text = "Join"
+text = "🔗Join"
+
+[node name="CancelJoinButton" type="Button" parent="Choices"]
+layout_mode = 2
+text = "⌛ Waiting for Game
+(click to cancel)"
 
 [node name="HotseatButton" type="Button" parent="Choices"]
 layout_mode = 2
-text = "Hotseat"
+text = "🖥️Hotseat"
 
 [node name="OptionsButton" type="Button" parent="Choices"]
 layout_mode = 2
-text = "Options
+text = "🎛️Options
 "
 
 [node name="QuitButton" type="Button" parent="Choices"]
 layout_mode = 2
-text = "Quit"
+text = "❌Quit"
 
-[connection signal="toggled" from="Choices/MultiplayerButton" to="." method="_on_multiplayer_button_toggled"]
+[connection signal="toggled" from="Choices/NetworkButton" to="." method="_on_network_button_toggled"]
 [connection signal="focus_exited" from="Choices/NameEntry" to="." method="_on_name_entry_focus_exited"]
 [connection signal="text_changed" from="Choices/NameEntry" to="." method="_on_name_entry_text_changed"]
 [connection signal="pressed" from="Choices/ConnectionChoices/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Choices/ConnectionChoices/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Choices/CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]
 [connection signal="pressed" from="Choices/HotseatButton" to="." method="_on_hotseat_pressed"]
 [connection signal="pressed" from="Choices/OptionsButton" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="Choices/QuitButton" to="." method="_on_quit_pressed"]

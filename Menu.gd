@@ -8,30 +8,31 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 
 var global: Global
 
-var multiplayer_button: Button
+var network_button: Button
 var connection_choices: HBoxContainer
 var name_entry: LineEdit
 var host_button: Button
 var join_button: Button
+var cancel_join_button: Button
 var hotseat_button: Button
+var options_button: Button
+var quit_button: Button
 
 
 func _ready():
 	# Cache casted nodes
-	multiplayer_button = $Choices/MultiplayerButton
+	network_button = $Choices/NetworkButton
 	connection_choices = $Choices/ConnectionChoices
 	name_entry = $Choices/NameEntry
 	host_button = $Choices/ConnectionChoices/Host
 	join_button = $Choices/ConnectionChoices/Join
+	cancel_join_button = $Choices/CancelJoinButton
 	hotseat_button = $Choices/HotseatButton
+	options_button = $Choices/OptionsButton
+	quit_button = $Choices/QuitButton
 
-	# Default states
 	#multiplayer_button.grab_click_focus() # TODO: does grab_click_focus snap mouse to this button?
-	multiplayer_button.grab_focus()
-	name_entry.visible = false
-	connection_choices.visible = false
-	hotseat_button.disabled = false
-	hotseat_button.tooltip_text = HOTSEAT_ENABLED_TOOLTIP
+	set_default_state()
 
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
@@ -41,6 +42,26 @@ func _ready():
 	if DisplayServer.get_name() == "headless":
 		print("Automatically starting dedicated server")
 		#_on_host_pressed.call_deferred()
+
+
+func _on_network_button_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		set_networking_state()
+	else:
+		set_default_state()
+
+
+func _on_name_entry_text_changed(new_text: String) -> void:
+	if new_text.length() > 0:
+		host_button.disabled = false
+		join_button.disabled = false
+	else:
+		host_button.disabled = true
+		join_button.disabled = true
+
+
+func _on_name_entry_focus_exited() -> void:
+	global.player_name = name_entry.text
 
 
 func _on_host_pressed() -> void:
@@ -62,6 +83,8 @@ func _on_join_pressed() -> void:
 	#if txt == "":
 	#OS.alert("Need a remote to connect to.")
 	#return
+	set_joining_state()
+
 	var peer = ENetMultiplayerPeer.new()
 	# TODO: try with "localhost"
 	# TODO: first param should be an IP the user provides in future
@@ -73,6 +96,10 @@ func _on_join_pressed() -> void:
 
 	global.is_multiplayer = true
 	start_game()
+
+
+func _on_cancel_join_button_pressed() -> void:
+	set_networking_state()
 
 
 func _on_hotseat_pressed():
@@ -109,27 +136,40 @@ func change_board(scene: PackedScene):
 	board.add_child(scene.instantiate())
 
 
-func _on_multiplayer_button_toggled(toggled_on: bool) -> void:
-	hotseat_button.disabled = toggled_on
-	connection_choices.visible = toggled_on
-	name_entry.visible = toggled_on
-
-	if toggled_on:
-		hotseat_button.tooltip_text = HOTSEAT_DISABLED_TOOLTIP
-		name_entry.grab_focus()
-		name_entry.emit_signal("text_changed", name_entry.text)
-	else:
-		hotseat_button.tooltip_text = HOTSEAT_ENABLED_TOOLTIP
-
-
-func _on_name_entry_text_changed(new_text: String) -> void:
-	if new_text.length() > 0:
-		host_button.disabled = false
-		join_button.disabled = false
-	else:
-		host_button.disabled = true
-		join_button.disabled = true
+func set_default_state() -> void:
+	network_button.disabled = false
+	network_button.grab_focus()
+	name_entry.visible = false
+	connection_choices.visible = false
+	cancel_join_button.visible = false
+	hotseat_button.disabled = false
+	hotseat_button.tooltip_text = HOTSEAT_ENABLED_TOOLTIP
+	options_button.disabled = false
+	quit_button.disabled = false
 
 
-func _on_name_entry_focus_exited() -> void:
-	global.player_name = name_entry.text
+func set_networking_state() -> void:
+	network_button.disabled = false
+	name_entry.visible = true
+	name_entry.grab_focus()
+	name_entry.emit_signal("text_changed", name_entry.text)
+	connection_choices.visible = true
+	host_button.visible = true
+	join_button.visible = true
+	cancel_join_button.visible = false
+	hotseat_button.disabled = true
+	hotseat_button.tooltip_text = HOTSEAT_DISABLED_TOOLTIP
+	options_button.disabled = false
+	quit_button.disabled = false
+
+
+func set_joining_state() -> void:
+	network_button.disabled = true
+	name_entry.visible = false
+	connection_choices.visible = true
+	host_button.visible = false
+	join_button.visible = false
+	cancel_join_button.visible = true
+	hotseat_button.disabled = true
+	options_button.disabled = true
+	quit_button.disabled = true
