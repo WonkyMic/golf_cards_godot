@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://tk8uscsfeqvn"]
 
-[ext_resource type="Script" path="res://chat_panel.gd" id="1_utpp1"]
+[ext_resource type="Script" path="res://widgets/chat_panel.gd" id="1_utpp1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b6ebs"]
 properties/0/path = NodePath("GridContainer/Panel/RichTextLabel:text")

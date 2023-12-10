@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cjr55wsdv0nng" path="res://player.tscn" id="2_2035l"]
 [ext_resource type="PackedScene" uid="uid://e6ownkyurw27" path="res://deck_and_discard.tscn" id="2_rxxxg"]
 [ext_resource type="PackedScene" uid="uid://bhlt65yso7yd2" path="res://info.tscn" id="4_p0s2j"]
-[ext_resource type="PackedScene" uid="uid://tk8uscsfeqvn" path="res://chat_panel.tscn" id="5_qxobr"]
+[ext_resource type="PackedScene" uid="uid://tk8uscsfeqvn" path="res://widgets/chat_panel.tscn" id="5_qxobr"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_jkac5")
