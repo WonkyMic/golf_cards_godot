@@ -2,7 +2,8 @@ extends Control
 
 signal server_disconnected
 
-const PORT := 4433
+const DEFAULT_IP := "127.0.0.1"
+const DEFAULT_PORT := 4433
 const HOTSEAT_ENABLED_TOOLTIP := "Play both sides from the same device"
 const HOTSEAT_DISABLED_TOOLTIP := (
 	HOTSEAT_ENABLED_TOOLTIP + " (toggle multiplayer button to enable this option)"
@@ -71,7 +72,7 @@ func _on_name_entry_focus_exited() -> void:
 func _on_host_pressed() -> void:
 	# Start as server
 	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(PORT)
+	peer.create_server(DEFAULT_PORT)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start multiplayer server")
 		return
@@ -92,7 +93,7 @@ func _on_join_pressed() -> void:
 	var peer := ENetMultiplayerPeer.new()
 	# TODO: try with "localhost"
 	# TODO: first param should be an IP the user provides in future
-	peer.create_client("127.0.0.1", PORT)
+	peer.create_client(DEFAULT_IP, DEFAULT_PORT)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start multiplayer client")
 		return
