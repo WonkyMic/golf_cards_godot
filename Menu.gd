@@ -1,5 +1,7 @@
 extends Control
 
+signal server_disconnected
+
 const PORT := 4433
 const HOTSEAT_ENABLED_TOOLTIP := "Play both sides from the same device"
 const HOTSEAT_DISABLED_TOOLTIP := (
@@ -36,6 +38,8 @@ func _ready():
 
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
+	multiplayer.server_disconnected.connect(_on_server_disconnected)
+
 	global = get_node("/root/Global")
 
 	# Automatically start the server in headless mode.
@@ -85,7 +89,7 @@ func _on_join_pressed() -> void:
 	#return
 	set_joining_state()
 
-	var peer = ENetMultiplayerPeer.new()
+	var peer := ENetMultiplayerPeer.new()
 	# TODO: try with "localhost"
 	# TODO: first param should be an IP the user provides in future
 	peer.create_client("127.0.0.1", PORT)
@@ -99,6 +103,8 @@ func _on_join_pressed() -> void:
 
 
 func _on_cancel_join_button_pressed() -> void:
+	multiplayer.multiplayer_peer.close()
+	multiplayer.multiplayer_peer = null
 	set_networking_state()
 
 
@@ -113,6 +119,12 @@ func _on_options_pressed():
 
 func _on_quit_pressed():
 	get_tree().quit()
+
+
+func _on_server_disconnected():
+	multiplayer.multiplayer_peer = null
+	set_default_state()
+	server_disconnected.emit()
 
 
 func start_game():
