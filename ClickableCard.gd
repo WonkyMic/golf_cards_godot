@@ -15,7 +15,7 @@ func _ready():
 	
 func set_card_value(c_name):
 	card_name = c_name
-	front_texture = load("res://assets/" + card_name + ".png")
+	front_texture = load("res://assets/cards/" + card_name + ".png")
 	set_card_texture()
 
 func set_card_texture(a_texture = null):

@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://bnpv673k3jiqg"]
 
-[ext_resource type="Texture2D" uid="uid://di62gracqi2og" path="res://assets/card_back.png" id="1_g64y6"]
+[ext_resource type="Texture2D" uid="uid://di62gracqi2og" path="res://assets/cards/card_back.png" id="1_g64y6"]
 [ext_resource type="Script" path="res://ClickableCard.gd" id="2_erf4v"]
-[ext_resource type="Texture2D" uid="uid://cmxo08admjdu6" path="res://assets/card_empty.png" id="3_8pt5i"]
+[ext_resource type="Texture2D" uid="uid://cmxo08admjdu6" path="res://assets/cards/card_empty.png" id="3_8pt5i"]
 
 [sub_resource type="Animation" id="Animation_mneb5"]
 resource_name = "flip"
