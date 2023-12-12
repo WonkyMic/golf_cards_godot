@@ -1,13 +1,30 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfuld6fnl6oat"]
+[gd_scene load_steps=7 format=3 uid="uid://bfuld6fnl6oat"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_jkac5"]
 [ext_resource type="PackedScene" uid="uid://cjr55wsdv0nng" path="res://player.tscn" id="2_2035l"]
 [ext_resource type="PackedScene" uid="uid://e6ownkyurw27" path="res://deck_and_discard.tscn" id="2_rxxxg"]
+[ext_resource type="Texture2D" uid="uid://jg3yi0gypbop" path="res://assets/background/kelly-green-canvas-fabric-texture.jpg" id="2_xdgpx"]
 [ext_resource type="PackedScene" uid="uid://bhlt65yso7yd2" path="res://info.tscn" id="4_p0s2j"]
 [ext_resource type="PackedScene" uid="uid://tk8uscsfeqvn" path="res://widgets/chat_panel.tscn" id="5_qxobr"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_jkac5")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -462.0
+offset_top = -308.0
+offset_right = 462.0
+offset_bottom = 308.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xdgpx")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
