@@ -11,6 +11,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_w1f1x")
+lobby_scene = "res://scenes/lobby.tscn"
+game_scene = "res://scenes/game.tscn"
+main_scene = "res://main.tscn"
+options_scene = "res://options_menu.tscn"
 
 [node name="Board" type="Node" parent="."]
 
@@ -57,11 +61,6 @@ size_flags_horizontal = 3
 disabled = true
 text = "🔗Join"
 
-[node name="CancelJoinButton" type="Button" parent="Choices"]
-layout_mode = 2
-text = "⌛ Waiting for Game
-(click to cancel)"
-
 [node name="HotseatButton" type="Button" parent="Choices"]
 layout_mode = 2
 text = "🖥️Hotseat"
@@ -80,7 +79,6 @@ text = "❌Quit"
 [connection signal="text_changed" from="Choices/NameEntry" to="." method="_on_name_entry_text_changed"]
 [connection signal="pressed" from="Choices/ConnectionChoices/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Choices/ConnectionChoices/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="Choices/CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]
 [connection signal="pressed" from="Choices/HotseatButton" to="." method="_on_hotseat_pressed"]
 [connection signal="pressed" from="Choices/OptionsButton" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="Choices/QuitButton" to="." method="_on_quit_pressed"]

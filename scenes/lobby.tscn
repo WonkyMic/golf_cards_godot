@@ -1,0 +1,96 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf2icw5uy3krn"]
+
+[ext_resource type="Script" path="res://scenes/lobby.gd" id="1_u7y87"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u7y87")
+menu_scene = "res://menu.tscn"
+game_scene = "res://scenes/game.tscn"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 194.0
+offset_bottom = 55.0
+text = "⏪Back"
+
+[node name="JoinButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 24.0
+offset_top = 63.0
+offset_right = 195.0
+offset_bottom = 94.0
+disabled = true
+text = "🔗Connect"
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 218.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ServerList" type="ItemList" parent="Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+auto_height = true
+item_count = 12
+max_columns = 3
+same_column_width = true
+item_0/text = "Server Name"
+item_0/selectable = false
+item_0/disabled = true
+item_1/text = "Ip Address"
+item_1/selectable = false
+item_1/disabled = true
+item_2/text = "Port"
+item_2/selectable = false
+item_2/disabled = true
+item_3/text = "Wonky Mic's Glorious Emporium of Glory"
+item_4/text = "127.0.0.1"
+item_4/selectable = false
+item_4/disabled = true
+item_5/text = "4433"
+item_5/selectable = false
+item_5/disabled = true
+item_6/text = "Bob's Palace"
+item_7/text = "127.0.0.2"
+item_7/selectable = false
+item_7/disabled = true
+item_8/text = "4433"
+item_8/selectable = false
+item_8/disabled = true
+item_9/text = "Dreary Plaza"
+item_10/text = "127.0.0.3"
+item_10/selectable = false
+item_10/disabled = true
+item_11/text = "4433"
+item_11/selectable = false
+item_11/disabled = true
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="item_selected" from="Panel/ScrollContainer/ServerList" to="." method="_on_server_list_item_selected"]

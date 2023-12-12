@@ -16,10 +16,14 @@ var connection_choices: HBoxContainer
 var name_entry: LineEdit
 var host_button: Button
 var join_button: Button
-var cancel_join_button: Button
 var hotseat_button: Button
 var options_button: Button
 var quit_button: Button
+
+@export_file("*.tscn") var lobby_scene: String
+@export_file("*.tscn") var game_scene: String
+@export_file("*.tscn") var main_scene: String
+@export_file("*.tscn") var options_scene: String
 
 
 func _ready():
@@ -29,7 +33,6 @@ func _ready():
 	name_entry = $Choices/NameEntry
 	host_button = $Choices/ConnectionChoices/Host
 	join_button = $Choices/ConnectionChoices/Join
-	cancel_join_button = $Choices/CancelJoinButton
 	hotseat_button = $Choices/HotseatButton
 	options_button = $Choices/OptionsButton
 	quit_button = $Choices/QuitButton
@@ -37,13 +40,9 @@ func _ready():
 	#multiplayer_button.grab_click_focus() # TODO: does grab_click_focus snap mouse to this button?
 	set_default_state()
 
-	# You can save bandwith by disabling server relay and peer notifications.
-	multiplayer.server_relay = false
-	multiplayer.server_disconnected.connect(_on_server_disconnected)
-
 	global = get_node("/root/Global")
 
-	# Automatically start the server in headless mode.
+	# TODO: add option to automatically start the server in headless mode.
 	if DisplayServer.get_name() == "headless":
 		print("Automatically starting dedicated server")
 		#_on_host_pressed.call_deferred()
@@ -70,37 +69,14 @@ func _on_name_entry_focus_exited() -> void:
 
 
 func _on_host_pressed() -> void:
-	# Start as server
-	var peer = ENetMultiplayerPeer.new()
-	peer.create_server(DEFAULT_PORT)
-	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
-		OS.alert("Failed to start multiplayer server")
-		return
-	multiplayer.multiplayer_peer = peer
-
-	global.is_multiplayer = true
-	start_game()
+	global.is_server = true
+	global.ip_address = DEFAULT_IP
+	global.port = DEFAULT_PORT
+	get_tree().change_scene_to_file(game_scene)
 
 
 func _on_join_pressed() -> void:
-	# Start as client
-	#var txt : String = $UI/Net/Options/Remote.text
-	#if txt == "":
-	#OS.alert("Need a remote to connect to.")
-	#return
-	set_joining_state()
-
-	var peer := ENetMultiplayerPeer.new()
-	# TODO: try with "localhost"
-	# TODO: first param should be an IP the user provides in future
-	peer.create_client(DEFAULT_IP, DEFAULT_PORT)
-	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
-		OS.alert("Failed to start multiplayer client")
-		return
-	multiplayer.multiplayer_peer = peer
-
-	global.is_multiplayer = true
-	start_game()
+	get_tree().change_scene_to_file(lobby_scene)
 
 
 func _on_cancel_join_button_pressed() -> void:
@@ -111,31 +87,15 @@ func _on_cancel_join_button_pressed() -> void:
 
 func _on_hotseat_pressed():
 	global.is_multiplayer = false
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_file(main_scene)
 
 
 func _on_options_pressed():
-	get_tree().change_scene_to_file("res://options_menu.tscn")
+	get_tree().change_scene_to_file(options_scene)
 
 
 func _on_quit_pressed():
 	get_tree().quit()
-
-
-func _on_server_disconnected():
-	multiplayer.multiplayer_peer = null
-	set_default_state()
-	server_disconnected.emit()
-
-
-func start_game():
-	# TODO: Hide the UI and unpause to start the game.
-	#$UI.hide()
-
-	# Only change board on the server.
-	# Clients will instantiate the board via the spawner.
-	if multiplayer.is_server():
-		change_board.call_deferred(load("res://main.tscn"))
 
 
 # Call this function deferred and only on the main authority (server).
@@ -150,39 +110,19 @@ func change_board(scene: PackedScene):
 
 
 func set_default_state() -> void:
-	network_button.disabled = false
 	network_button.grab_focus()
 	name_entry.visible = false
 	connection_choices.visible = false
-	cancel_join_button.visible = false
 	hotseat_button.disabled = false
 	hotseat_button.tooltip_text = HOTSEAT_ENABLED_TOOLTIP
-	options_button.disabled = false
-	quit_button.disabled = false
 
 
 func set_networking_state() -> void:
-	network_button.disabled = false
 	name_entry.visible = true
 	name_entry.grab_focus()
 	name_entry.emit_signal("text_changed", name_entry.text)
 	connection_choices.visible = true
 	host_button.visible = true
 	join_button.visible = true
-	cancel_join_button.visible = false
 	hotseat_button.disabled = true
 	hotseat_button.tooltip_text = HOTSEAT_DISABLED_TOOLTIP
-	options_button.disabled = false
-	quit_button.disabled = false
-
-
-func set_joining_state() -> void:
-	network_button.disabled = true
-	name_entry.visible = false
-	connection_choices.visible = true
-	host_button.visible = false
-	join_button.visible = false
-	cancel_join_button.visible = true
-	hotseat_button.disabled = true
-	options_button.disabled = true
-	quit_button.disabled = true
