@@ -1,5 +1,7 @@
 extends Control
 
+const DEFAULT_PORT := 2650
+
 var global: Global
 
 var back_button: Button
@@ -108,23 +110,25 @@ func _on_join_button_pressed() -> void:
 		get_tree().change_scene_to_file(game_scene)
 	elif (
 		ip_domain_line.text.length() > 0
-		and port_line.text.length() > 0
-		and port_line.text.is_valid_int()
+		and (port_line.text.length() == 0 or is_valid_port(port_line.text))
 	):
 		global.ip_address = ip_domain_line.text
-		global.port = int(port_line.text)
+		if port_line.text.length() == 0:
+			global.port = DEFAULT_PORT
+		else:
+			global.port = int(port_line.text)
 		multiplayer.multiplayer_peer = null
 		get_tree().change_scene_to_file(game_scene)
 	else:
 		update_form_state()
 
 
-func _on_ip_domain_line_text_changed(new_text: String) -> void:
+func _on_ip_domain_line_text_changed(_new_text: String) -> void:
 	server_list.deselect_all()
 	update_form_state()
 
 
-func _on_port_line_text_changed(new_text: String) -> void:
+func _on_port_line_text_changed(_new_text: String) -> void:
 	server_list.deselect_all()
 	update_form_state()
 
@@ -138,36 +142,40 @@ func update_form_state() -> void:
 			join_button.disabled = true
 			join_button.text = "📝Enter IP Address\nor Select Server"
 	else:
-		# determine if bad ip and color ip/domain field
-		var bad_ip := false
-		if regex_ip_domain.search(ip_domain_line.text) == null:
-			bad_ip = true
+		# determine if bad ip/domain & color ip/domain
+		var has_bad_ip_or_domain := not is_valid_ip_domain(ip_domain_line.text)
+		if has_bad_ip_or_domain:
 			ip_domain_line.add_theme_color_override("font_color", Color(1, 0, 0))
 		else:
 			ip_domain_line.remove_theme_color_override("font_color")
 
-		# determine if bad port
-		var bad_port := false
-		if not port_line.text.is_valid_int():
-			bad_port = true
-		else:
-			var port := int(port_line.text)
-			bad_port = port <= 0 or port > 65535
-
-		# color port
-		if bad_port:
+		# determine if bad port & color port
+		var has_bad_port := port_line.text.length() > 0 and not is_valid_port(port_line.text)
+		if has_bad_port:
 			if not port_line.has_theme_color_override("font_color"):
 				port_line.add_theme_color_override("font_color", Color(1, 0, 0))
 		else:
 			port_line.remove_theme_color_override("font_color")
 
 		# adjust join button
-		if bad_ip:
+		if has_bad_ip_or_domain:
 			join_button.disabled = true
 			join_button.text = "❌Invalid IP/Domain"
-		elif bad_port:
+		elif has_bad_port:
 			join_button.disabled = true
 			join_button.text = "❌Invalid Port"
 		else:
 			join_button.disabled = false
 			join_button.text = "🔗Direct Connect"
+
+
+func is_valid_ip_domain(ip_domain_string: String) -> bool:
+	return regex_ip_domain.search(ip_domain_string) != null
+
+
+func is_valid_port(port_string: String) -> bool:
+	if not port_string.is_valid_int():
+		return false
+
+	var port := int(port_string)
+	return port > 0 or port <= 65535

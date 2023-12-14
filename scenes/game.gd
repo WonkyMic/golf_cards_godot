@@ -1,7 +1,7 @@
 extends Control
 
-const CANCEL_BUTTON_NAME_FORMAT = "⌛ Waiting for\n%s\n(click to cancel)"
-const CANCEL_BUTTON_ADDRESS_FORMAT = "⌛ Waiting for\n%s:%d\n(click to cancel)"
+const CANCEL_BUTTON_NAME_FORMAT = "⌛Waiting for\n%s\n(click to cancel)"
+const CANCEL_BUTTON_ADDRESS_FORMAT = "⌛Waiting for\n%s:%d\n(click to cancel)"
 
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var main_scene: String

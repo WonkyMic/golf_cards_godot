@@ -25,10 +25,12 @@ grow_vertical = 2
 
 [node name="BackButton" type="Button" parent="GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "⏪Back"
 
 [node name="HSeparator1" type="HSeparator" parent="GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="IpDomainLine" type="LineEdit" parent="GridContainer"]
 layout_mode = 2
@@ -39,14 +41,16 @@ alignment = 1
 [node name="PortLine" type="LineEdit" parent="GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "port"
+placeholder_text = "port (default: 2650)"
 alignment = 1
 
 [node name="HSeparator2" type="HSeparator" parent="GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="JoinButton" type="Button" parent="GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 disabled = true
 text = "🔗Connect"
 
@@ -91,7 +95,7 @@ item_3/text = "Wonky Mic's Glorious Emporium of Glory"
 item_4/text = "127.0.0.1"
 item_4/selectable = false
 item_4/disabled = true
-item_5/text = "4433"
+item_5/text = "2650"
 item_5/selectable = false
 item_5/disabled = true
 item_6/text = "Bob's Palace"
@@ -105,7 +109,7 @@ item_9/text = "Dreary Plaza"
 item_10/text = "127.0.0.3"
 item_10/selectable = false
 item_10/disabled = true
-item_11/text = "4433"
+item_11/text = "2650"
 item_11/selectable = false
 item_11/disabled = true
 
