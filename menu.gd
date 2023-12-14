@@ -2,8 +2,6 @@ extends Control
 
 signal server_disconnected
 
-const DEFAULT_IP := "127.0.0.1"
-const DEFAULT_PORT := 4433
 const HOTSEAT_ENABLED_TOOLTIP := "Play both sides from the same device"
 const HOTSEAT_DISABLED_TOOLTIP := (
 	HOTSEAT_ENABLED_TOOLTIP + " (toggle multiplayer button to enable this option)"
@@ -20,8 +18,8 @@ var hotseat_button: Button
 var options_button: Button
 var quit_button: Button
 
+@export_file("*.tscn") var host_setup_scene: String
 @export_file("*.tscn") var lobby_scene: String
-@export_file("*.tscn") var game_scene: String
 @export_file("*.tscn") var main_scene: String
 @export_file("*.tscn") var options_scene: String
 
@@ -70,9 +68,7 @@ func _on_name_entry_focus_exited() -> void:
 
 func _on_host_pressed() -> void:
 	global.is_server = true
-	global.ip_address = DEFAULT_IP
-	global.port = DEFAULT_PORT
-	get_tree().change_scene_to_file(game_scene)
+	get_tree().change_scene_to_file(host_setup_scene)
 
 
 func _on_join_pressed() -> void:

@@ -118,6 +118,7 @@ func _on_join_button_pressed() -> void:
 		else:
 			global.port = int(port_line.text)
 		multiplayer.multiplayer_peer = null
+		global.is_server = false
 		get_tree().change_scene_to_file(game_scene)
 	else:
 		update_form_state()

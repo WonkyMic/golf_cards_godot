@@ -1,0 +1,61 @@
+[gd_scene load_steps=2 format=3 uid="uid://cm5m50udkc71d"]
+
+[ext_resource type="Script" path="res://scenes/hosting_setup.gd" id="1_h76hm"]
+
+[node name="HostingSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h76hm")
+menu_scene = "res://menu.tscn"
+game_scene = "res://scenes/game.tscn"
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -37.0
+offset_right = 85.0
+offset_bottom = 37.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⏪Back"
+
+[node name="HSeparator1" type="HSeparator" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PortLine" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+placeholder_text = "port (default: 2650)"
+alignment = 1
+
+[node name="PasswordLine" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+placeholder_text = "password (optional)"
+alignment = 1
+secret = true
+
+[node name="HSeparator2" type="HSeparator" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="JoinButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⚡Start Game"
+
+[connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="text_changed" from="GridContainer/PortLine" to="." method="_on_port_line_text_changed"]
+[connection signal="pressed" from="GridContainer/JoinButton" to="." method="_on_join_button_pressed"]
