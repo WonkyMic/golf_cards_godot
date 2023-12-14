@@ -32,7 +32,8 @@ offset_right = 80.0
 offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "⌛ Waiting for Host
+text = "⌛ Waiting for
+server-name
 (click to cancel)"
 
 [connection signal="pressed" from="CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]

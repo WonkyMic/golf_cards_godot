@@ -1,15 +1,24 @@
 extends Control
 
-var global: Global
+const CANCEL_BUTTON_NAME_FORMAT = "⌛ Waiting for\n%s\n(click to cancel)"
+const CANCEL_BUTTON_ADDRESS_FORMAT = "⌛ Waiting for\n%s:%d\n(click to cancel)"
 
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var main_scene: String
+
+var global: Global
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	global = get_node("/root/Global")
 	global.is_multiplayer = true
+
+	var cancel_button := $CancelJoinButton
+	if global.server_name.length() > 0:
+		cancel_button.text = CANCEL_BUTTON_NAME_FORMAT % global.server_name
+	else:
+		cancel_button.text = CANCEL_BUTTON_ADDRESS_FORMAT % [global.ip_address, global.port]
 
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
