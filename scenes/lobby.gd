@@ -21,7 +21,7 @@ func _ready() -> void:
 	global.ip_address = ""
 	global.port = -1
 
-	regex_ip_domain.compile("\\S+\\.\\S+|localhost")
+	regex_ip_domain.compile("\\S+[.:]\\S+|localhost")
 
 	back_button = $GridContainer/BackButton
 	ip_domain_line = $GridContainer/IpDomainLine
