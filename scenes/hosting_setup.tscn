@@ -54,7 +54,7 @@ size_flags_horizontal = 3
 [node name="JoinButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "⚡Start Game"
+text = "⚡Start P2P Game"
 
 [connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="text_changed" from="GridContainer/PortLine" to="." method="_on_port_line_text_changed"]

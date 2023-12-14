@@ -2,6 +2,7 @@ extends Control
 
 const CANCEL_BUTTON_NAME_FORMAT = "⌛Waiting for\n%s\n(click to cancel)"
 const CANCEL_BUTTON_ADDRESS_FORMAT = "⌛Waiting for\n%s:%d\n(click to cancel)"
+const CANCEL_BUTTON_WAITING_FOR_OPPONENT = "⌛Waiting for\nopponent to arrive\n(click to cancel)"
 
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var main_scene: String
@@ -15,10 +16,6 @@ func _ready() -> void:
 	global.is_multiplayer = true
 
 	var cancel_button := $CancelJoinButton
-	if global.server_name.length() > 0:
-		cancel_button.text = CANCEL_BUTTON_NAME_FORMAT % global.server_name
-	else:
-		cancel_button.text = CANCEL_BUTTON_ADDRESS_FORMAT % [global.ip_address, global.port]
 
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
@@ -26,6 +23,10 @@ func _ready() -> void:
 	if global.is_server:
 		host(global.port, 2)
 	else:
+		if global.server_name.length() > 0:
+			cancel_button.text = CANCEL_BUTTON_NAME_FORMAT % global.server_name
+		else:
+			cancel_button.text = CANCEL_BUTTON_ADDRESS_FORMAT % [global.ip_address, global.port]
 		join(global.ip_address, global.port)
 
 
@@ -54,8 +55,6 @@ func host(port: int, max_clients: int) -> void:
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 
-	change_board.call_deferred(load(main_scene))
-
 
 # Call this function deferred and only on the main authority (server).
 func change_board(scene: PackedScene):
@@ -69,6 +68,7 @@ func change_board(scene: PackedScene):
 
 
 func _on_cancel_join_button_pressed() -> void:
+	multiplayer.multiplayer_peer = null
 	return_to_main_menu()
 
 
@@ -81,6 +81,7 @@ func return_to_main_menu() -> void:
 
 func _on_player_connected(id: int) -> void:
 	print("player %d connected" % id)
+	change_board.call_deferred(load(main_scene))
 
 
 func _on_player_disconnected(id: int) -> void:

@@ -46,7 +46,7 @@ func _on_port_line_text_changed(new_text: String) -> void:
 		join_button.text = "❌Invalid Port"
 	else:
 		join_button.disabled = false
-		join_button.text = "⚡Start Game"
+		join_button.text = "⚡Start P2P Game"
 
 
 func _on_join_button_pressed() -> void:
@@ -54,7 +54,6 @@ func _on_join_button_pressed() -> void:
 		global.port = DEFAULT_PORT
 	else:
 		global.port = int(port_line.text)
-	multiplayer.multiplayer_peer = null
 	global.is_server = true
 	get_tree().change_scene_to_file(game_scene)
 
