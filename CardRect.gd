@@ -9,4 +9,4 @@ func set_card(card = null):
 		return
 	
 	card_name = card
-	texture = load("res://assets/" + card_name + ".png")
+	texture = load("res://assets/cards/" + card_name + ".png")

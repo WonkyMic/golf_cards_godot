@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://08rjnoww31w4"]
+
+[ext_resource type="Script" path="res://scenes/game.gd" id="1_s0mbt"]
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s0mbt")
+menu_scene = "res://menu.tscn"
+main_scene = "res://main.tscn"
+
+[node name="Board" type="Node" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://main.tscn")
+spawn_path = NodePath("../Board")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -38.5
+offset_right = 77.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CancelJoinButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⌛Waiting for
+opponent to arrive
+(click to cancel)"
+
+[node name="KickButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "🥾Kick Player"
+
+[node name="PasswordLine" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+placeholder_text = "password"
+alignment = 1
+secret = true
+
+[node name="SubmitButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "🔑Submit Password"
+
+[connection signal="pressed" from="GridContainer/CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]
+[connection signal="pressed" from="GridContainer/KickButton" to="." method="_on_kick_button_pressed"]
+[connection signal="text_changed" from="GridContainer/PasswordLine" to="." method="_on_line_edit_text_changed"]
+[connection signal="pressed" from="GridContainer/SubmitButton" to="." method="_on_submit_button_pressed"]
