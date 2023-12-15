@@ -45,7 +45,6 @@ func _ready() -> void:
 
 
 func _on_cancel_join_button_pressed() -> void:
-	multiplayer.multiplayer_peer = null
 	return_to_main_menu()
 
 
@@ -127,7 +126,7 @@ func host(port: int, max_clients: int) -> void:
 # Call this function deferred and only on the main authority (server).
 func change_board(scene: PackedScene):
 	# Remove old board if any.
-	var board = $Board
+	var board := $Board
 	for c in board.get_children():
 		board.remove_child(c)
 		c.queue_free()

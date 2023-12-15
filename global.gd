@@ -1,6 +1,6 @@
 extends Node
 
-var is_server: bool
+var is_lobby: bool
 var is_multiplayer: bool
 var player_name: String
 

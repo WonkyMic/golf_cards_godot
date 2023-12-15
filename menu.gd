@@ -7,8 +7,12 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 	HOTSEAT_ENABLED_TOOLTIP + " (toggle multiplayer button to enable this option)"
 )
 
-var global: Global
+@export_file("*.tscn") var host_setup_scene: String
+@export_file("*.tscn") var lobby_scene: String
+@export_file("*.tscn") var main_scene: String
+@export_file("*.tscn") var options_scene: String
 
+var global: Global
 var network_button: Button
 var connection_choices: HBoxContainer
 var name_entry: LineEdit
@@ -18,13 +22,16 @@ var hotseat_button: Button
 var options_button: Button
 var quit_button: Button
 
-@export_file("*.tscn") var host_setup_scene: String
-@export_file("*.tscn") var lobby_scene: String
-@export_file("*.tscn") var main_scene: String
-@export_file("*.tscn") var options_scene: String
-
 
 func _ready():
+	global = get_node("/root/Global")
+	if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
+		print("Automatically starting dedicated matchmaking lobby server...")
+		print("[QUIT with CTRL+C when done]")
+		global.is_lobby = true
+		get_tree().change_scene_to_file.call_deferred(lobby_scene)
+		return
+
 	# Cache casted nodes
 	network_button = $Choices/NetworkButton
 	connection_choices = $Choices/ConnectionChoices
@@ -35,15 +42,7 @@ func _ready():
 	options_button = $Choices/OptionsButton
 	quit_button = $Choices/QuitButton
 
-	#multiplayer_button.grab_click_focus() # TODO: does grab_click_focus snap mouse to this button?
 	set_default_state()
-
-	global = get_node("/root/Global")
-
-	# TODO: add option to automatically start the server in headless mode.
-	if DisplayServer.get_name() == "headless":
-		print("Automatically starting dedicated server")
-		#_on_host_pressed.call_deferred()
 
 
 func _on_network_button_toggled(toggled_on: bool) -> void:
@@ -67,7 +66,6 @@ func _on_name_entry_focus_exited() -> void:
 
 
 func _on_host_pressed() -> void:
-	global.is_server = true
 	get_tree().change_scene_to_file(host_setup_scene)
 
 
@@ -92,17 +90,6 @@ func _on_options_pressed():
 
 func _on_quit_pressed():
 	get_tree().quit()
-
-
-# Call this function deferred and only on the main authority (server).
-func change_board(scene: PackedScene):
-	# Remove old board if any.
-	var board = $Board
-	for c in board.get_children():
-		board.remove_child(c)
-		c.queue_free()
-	# Add new board.
-	board.add_child(scene.instantiate())
 
 
 func set_default_state() -> void:
