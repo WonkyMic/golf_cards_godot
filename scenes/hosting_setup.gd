@@ -10,7 +10,7 @@ var global: Global
 var back_button: Button
 var port_line: LineEdit
 var password_line: LineEdit
-var join_button: Button
+var host_button: Button
 
 
 # Called when the node enters the scene tree for the first time.
@@ -20,7 +20,7 @@ func _ready() -> void:
 	back_button = $GridContainer/BackButton
 	port_line = $GridContainer/PortLine
 	password_line = $GridContainer/PasswordLine
-	join_button = $GridContainer/JoinButton
+	host_button = $GridContainer/HostButton
 
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
@@ -42,20 +42,19 @@ func _on_port_line_text_changed(new_text: String) -> void:
 
 	# adjust join button
 	if has_bad_port:
-		join_button.disabled = true
-		join_button.text = "❌Invalid Port"
+		host_button.disabled = true
+		host_button.text = "❌Invalid Port"
 	else:
-		join_button.disabled = false
-		join_button.text = "⚡Start P2P Game"
+		host_button.disabled = false
+		host_button.text = "⚡Start P2P Game"
 
 
-func _on_join_button_pressed() -> void:
+func _on_host_button_pressed() -> void:
 	if port_line.text.length() == 0:
 		global.port = DEFAULT_PORT
 	else:
 		global.port = int(port_line.text)
 	global.password = password_line.text
-	global.is_server = true
 	get_tree().change_scene_to_file(game_scene)
 
 
