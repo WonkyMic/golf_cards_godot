@@ -54,6 +54,7 @@ func _on_join_button_pressed() -> void:
 		global.port = DEFAULT_PORT
 	else:
 		global.port = int(port_line.text)
+	global.password = password_line.text
 	global.is_server = true
 	get_tree().change_scene_to_file(game_scene)
 
