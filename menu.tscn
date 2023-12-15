@@ -13,6 +13,7 @@ size_flags_horizontal = 3
 script = ExtResource("1_w1f1x")
 host_setup_scene = "res://scenes/hosting_setup.tscn"
 lobby_scene = "res://scenes/lobby.tscn"
+match_scene = "res://scenes/match.tscn"
 main_scene = "res://main.tscn"
 options_scene = "res://options_menu.tscn"
 

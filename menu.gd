@@ -9,6 +9,7 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 
 @export_file("*.tscn") var host_setup_scene: String
 @export_file("*.tscn") var lobby_scene: String
+@export_file("*.tscn") var match_scene: String
 @export_file("*.tscn") var main_scene: String
 @export_file("*.tscn") var options_scene: String
 
@@ -29,7 +30,7 @@ func _ready():
 		print("Automatically starting dedicated matchmaking lobby server...")
 		print("[QUIT with CTRL+C when done]")
 		global.is_lobby = true
-		get_tree().change_scene_to_file.call_deferred(lobby_scene)
+		get_tree().change_scene_to_file.call_deferred(match_scene)
 		return
 
 	# Cache casted nodes
