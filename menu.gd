@@ -8,40 +8,43 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 )
 
 @export_file("*.tscn") var host_setup_scene: String
+@export_file("*.tscn") var game_scene: String
 @export_file("*.tscn") var lobby_scene: String
 @export_file("*.tscn") var match_scene: String
 @export_file("*.tscn") var main_scene: String
 @export_file("*.tscn") var options_scene: String
 
-var global: Global
-var network_button: Button
-var connection_choices: HBoxContainer
-var name_entry: LineEdit
-var host_button: Button
-var join_button: Button
-var hotseat_button: Button
-var options_button: Button
-var quit_button: Button
+@onready var global := get_node("/root/Global")
+@onready var network_button := $Choices/NetworkButton
+@onready var lobby_button := $Choices/LobbyButton
+@onready var name_entry := $Choices/NameEntry
+@onready var connection_choices := $Choices/ConnectionChoices
+@onready var host_button := $Choices/ConnectionChoices/Host
+@onready var join_button := $Choices/ConnectionChoices/Join
+@onready var hotseat_button := $Choices/HotseatButton
+@onready var options_button := $Choices/OptionsButton
+@onready var quit_button := $Choices/QuitButton
 
 
 func _ready():
-	global = get_node("/root/Global")
 	if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
+		if "--game" in OS.get_cmdline_args():
+			#print("Automatically starting dedicated game server...")
+			#print("[QUIT with CTRL+C when done]")
+			#print(
+			#(
+			#"loading as game scene w/ ip=%s:%d and pass=%s"
+			#% [global.ip_address, global.port, global.password]
+			#)
+			#)
+			get_tree().change_scene_to_file.call_deferred(game_scene)
+			return
+
 		print("Automatically starting dedicated matchmaking lobby server...")
 		print("[QUIT with CTRL+C when done]")
 		global.is_lobby = true
-		get_tree().change_scene_to_file.call_deferred(match_scene)
+		get_tree().change_scene_to_file.call_deferred(lobby_scene)
 		return
-
-	# Cache casted nodes
-	network_button = $Choices/NetworkButton
-	connection_choices = $Choices/ConnectionChoices
-	name_entry = $Choices/NameEntry
-	host_button = $Choices/ConnectionChoices/Host
-	join_button = $Choices/ConnectionChoices/Join
-	hotseat_button = $Choices/HotseatButton
-	options_button = $Choices/OptionsButton
-	quit_button = $Choices/QuitButton
 
 	set_default_state()
 
@@ -51,6 +54,11 @@ func _on_network_button_toggled(toggled_on: bool) -> void:
 		set_networking_state()
 	else:
 		set_default_state()
+
+
+func _on_lobby_button_pressed() -> void:
+	global.is_lobby = true
+	get_tree().change_scene_to_file(lobby_scene)
 
 
 func _on_name_entry_text_changed(new_text: String) -> void:
@@ -71,6 +79,9 @@ func _on_host_pressed() -> void:
 
 
 func _on_join_pressed() -> void:
+	global.is_game_host = false
+	global.ip_address = Lobby.DEFAULT_IP
+	global.port = Lobby.DEFAULT_PORT
 	get_tree().change_scene_to_file(lobby_scene)
 
 
@@ -95,6 +106,7 @@ func _on_quit_pressed():
 
 func set_default_state() -> void:
 	network_button.grab_focus()
+	lobby_button.visible = false
 	name_entry.visible = false
 	connection_choices.visible = false
 	hotseat_button.disabled = false
@@ -102,9 +114,10 @@ func set_default_state() -> void:
 
 
 func set_networking_state() -> void:
+	lobby_button.visible = true
 	name_entry.visible = true
 	name_entry.grab_focus()
-	name_entry.emit_signal("text_changed", name_entry.text)
+	name_entry.text_changed.emit(name_entry.text)
 	connection_choices.visible = true
 	host_button.visible = true
 	join_button.visible = true

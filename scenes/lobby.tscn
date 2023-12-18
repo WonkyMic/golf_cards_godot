@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf2icw5uy3krn"]
+[gd_scene load_steps=2 format=3 uid="uid://nfaewv8ptccv"]
 
 [ext_resource type="Script" path="res://scenes/lobby.gd" id="1_u7y87"]
 
@@ -13,108 +13,26 @@ script = ExtResource("1_u7y87")
 menu_scene = "res://menu.tscn"
 game_scene = "res://scenes/game.tscn"
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="CancelJoinButton" type="Button" parent="."]
 layout_mode = 1
-anchors_preset = -1
-anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 194.0
-offset_bottom = -24.0
-grow_vertical = 2
-
-[node name="BackButton" type="Button" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "⏪Back"
-
-[node name="HSeparator1" type="HSeparator" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="IpDomainLine" type="LineEdit" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "ip address / domain"
-alignment = 1
-
-[node name="PortLine" type="LineEdit" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "port (default: 2650)"
-alignment = 1
-
-[node name="HSeparator2" type="HSeparator" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="JoinButton" type="Button" parent="GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "🔗Connect"
-
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 218.0
-offset_top = 24.0
-offset_right = -24.0
-offset_bottom = -24.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.5
+offset_top = -27.0
+offset_right = 97.5
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ServerList" type="ItemList" parent="Panel/ScrollContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-auto_height = true
-item_count = 12
-max_columns = 3
-same_column_width = true
-item_0/text = "Server Name"
-item_0/selectable = false
-item_0/disabled = true
-item_1/text = "Ip Address"
-item_1/selectable = false
-item_1/disabled = true
-item_2/text = "Port"
-item_2/selectable = false
-item_2/disabled = true
-item_3/text = "Wonky Mic's Glorious Emporium of Glory"
-item_4/text = "127.0.0.1"
-item_4/selectable = false
-item_4/disabled = true
-item_5/text = "2650"
-item_5/selectable = false
-item_5/disabled = true
-item_6/text = "Bob's Palace"
-item_7/text = "127.0.0.2"
-item_7/selectable = false
-item_7/disabled = true
-item_8/text = "4433"
-item_8/selectable = false
-item_8/disabled = true
-item_9/text = "Dreary Plaza"
-item_10/text = "127.0.0.3"
-item_10/selectable = false
-item_10/disabled = true
-item_11/text = "2650"
-item_11/selectable = false
-item_11/disabled = true
+text = "⌛Waiting for opponent
+(click to cancel)"
 
-[connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="text_changed" from="GridContainer/IpDomainLine" to="." method="_on_ip_domain_line_text_changed"]
-[connection signal="text_changed" from="GridContainer/PortLine" to="." method="_on_port_line_text_changed"]
-[connection signal="pressed" from="GridContainer/JoinButton" to="." method="_on_join_button_pressed"]
-[connection signal="item_selected" from="Panel/ScrollContainer/ServerList" to="." method="_on_server_list_item_selected"]
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="pressed" from="CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

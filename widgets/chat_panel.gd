@@ -38,6 +38,8 @@ func _ready() -> void:
 
 	visible = global.is_multiplayer
 
+	# TODO: update to no longer use MultiplayerSynchronizer!! Instead, sync text to players directly
+
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("send_message"):
