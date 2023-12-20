@@ -5,23 +5,14 @@ const DEFAULT_PORT := 2650
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var game_scene: String
 
-var global: Global
-
-var back_button: Button
-var port_line: LineEdit
-var password_line: LineEdit
-var host_button: Button
+@onready var back_button := $GridContainer/BackButton
+@onready var port_line := $GridContainer/PortLine
+@onready var password_line := $GridContainer/PasswordLine
+@onready var host_button := $GridContainer/HostButton
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	global = get_node("/root/Global")
-
-	back_button = $GridContainer/BackButton
-	port_line = $GridContainer/PortLine
-	password_line = $GridContainer/PasswordLine
-	host_button = $GridContainer/HostButton
-
 	# You can save bandwith by disabling server relay and peer notifications.
 	multiplayer.server_relay = false
 
@@ -51,10 +42,10 @@ func _on_port_line_text_changed(new_text: String) -> void:
 
 func _on_host_button_pressed() -> void:
 	if port_line.text.length() == 0:
-		global.port = DEFAULT_PORT
+		Global.server_port = DEFAULT_PORT
 	else:
-		global.port = int(port_line.text)
-	global.password = password_line.text
+		Global.server_port = int(port_line.text)
+	Global.server_password = password_line.text
 	get_tree().change_scene_to_file(game_scene)
 
 

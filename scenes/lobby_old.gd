@@ -5,32 +5,22 @@ const DEFAULT_PORT := 2650
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var game_scene: String
 
-var global: Global
-
-var back_button: Button
-var ip_domain_line: LineEdit
-var port_line: LineEdit
-var join_button: Button
-var server_list: ItemList
-
 var regex_ip_domain := RegEx.new()
+
+@onready var back_button := $GridContainer/BackButton
+@onready var ip_domain_line := $GridContainer/IpDomainLine
+@onready var port_line := $GridContainer/PortLine
+@onready var join_button := $GridContainer/JoinButton
+@onready var server_list := $Panel/ScrollContainer/ServerList
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	global = get_node("/root/Global")
-	global.server_name = ""
-	global.ip_address = ""
-	global.port = -1
+	Global.server_name = ""
+	Global.server_ip = ""
+	Global.server_port = -1
 
 	regex_ip_domain.compile("\\S+[.:]\\S+|localhost")
-
-	back_button = $GridContainer/BackButton
-	ip_domain_line = $GridContainer/IpDomainLine
-	port_line = $GridContainer/PortLine
-	join_button = $GridContainer/JoinButton
-
-	server_list = $Panel/ScrollContainer/ServerList
 
 	update_form_state()
 
@@ -103,22 +93,22 @@ func _on_server_list_item_selected(_index: int) -> void:
 
 func _on_join_button_pressed() -> void:
 	if server_list.is_anything_selected():
-		global.server_name = server_list.get_item_text(server_list.get_selected_items()[0])
-		global.ip_address = server_list.get_item_text(server_list.get_selected_items()[0] + 1)
-		global.port = int(server_list.get_item_text(server_list.get_selected_items()[0] + 2))
+		Global.server_name = server_list.get_item_text(server_list.get_selected_items()[0])
+		Global.server_ip = server_list.get_item_text(server_list.get_selected_items()[0] + 1)
+		Global.server_port = int(server_list.get_item_text(server_list.get_selected_items()[0] + 2))
 		multiplayer.multiplayer_peer = null
 		get_tree().change_scene_to_file(game_scene)
 	elif (
 		ip_domain_line.text.length() > 0
 		and (port_line.text.length() == 0 or is_valid_port(port_line.text))
 	):
-		global.ip_address = ip_domain_line.text
+		Global.server_ip = ip_domain_line.text
 		if port_line.text.length() == 0:
-			global.port = DEFAULT_PORT
+			Global.server_port = DEFAULT_PORT
 		else:
-			global.port = int(port_line.text)
+			Global.server_port = int(port_line.text)
 		multiplayer.multiplayer_peer = null
-		global.is_game_host = false
+		Global.is_game_host = false
 		get_tree().change_scene_to_file(game_scene)
 	else:
 		update_form_state()
@@ -151,7 +141,7 @@ func update_form_state() -> void:
 			ip_domain_line.remove_theme_color_override("font_color")
 
 		# determine if bad port & color port
-		var has_bad_port := port_line.text.length() > 0 and not is_valid_port(port_line.text)
+		var has_bad_port: bool = port_line.text.length() > 0 and not is_valid_port(port_line.text)
 		if has_bad_port:
 			if not port_line.has_theme_color_override("font_color"):
 				port_line.add_theme_color_override("font_color", Color(1, 0, 0))

@@ -14,7 +14,6 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 @export_file("*.tscn") var main_scene: String
 @export_file("*.tscn") var options_scene: String
 
-@onready var global := get_node("/root/Global")
 @onready var network_button := $Choices/NetworkButton
 @onready var lobby_button := $Choices/LobbyButton
 @onready var name_entry := $Choices/NameEntry
@@ -29,20 +28,12 @@ const HOTSEAT_DISABLED_TOOLTIP := (
 func _ready():
 	if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
 		if "--game" in OS.get_cmdline_args():
-			#print("Automatically starting dedicated game server...")
-			#print("[QUIT with CTRL+C when done]")
-			#print(
-			#(
-			#"loading as game scene w/ ip=%s:%d and pass=%s"
-			#% [global.ip_address, global.port, global.password]
-			#)
-			#)
 			get_tree().change_scene_to_file.call_deferred(game_scene)
 			return
 
 		print("Automatically starting dedicated matchmaking lobby server...")
 		print("[QUIT with CTRL+C when done]")
-		global.is_lobby = true
+		Global.is_lobby = true
 		get_tree().change_scene_to_file.call_deferred(lobby_scene)
 		return
 
@@ -57,7 +48,7 @@ func _on_network_button_toggled(toggled_on: bool) -> void:
 
 
 func _on_lobby_button_pressed() -> void:
-	global.is_lobby = true
+	Global.is_lobby = true
 	get_tree().change_scene_to_file(lobby_scene)
 
 
@@ -71,7 +62,7 @@ func _on_name_entry_text_changed(new_text: String) -> void:
 
 
 func _on_name_entry_focus_exited() -> void:
-	global.player_name = name_entry.text
+	Global.player_name = name_entry.text
 
 
 func _on_host_pressed() -> void:
@@ -79,9 +70,7 @@ func _on_host_pressed() -> void:
 
 
 func _on_join_pressed() -> void:
-	global.is_game_host = false
-	global.ip_address = Lobby.DEFAULT_IP
-	global.port = Lobby.DEFAULT_PORT
+	Global.is_game_host = false
 	get_tree().change_scene_to_file(lobby_scene)
 
 
@@ -92,7 +81,7 @@ func _on_cancel_join_button_pressed() -> void:
 
 
 func _on_hotseat_pressed():
-	global.is_multiplayer = false
+	Global.is_multiplayer = false
 	get_tree().change_scene_to_file(main_scene)
 
 

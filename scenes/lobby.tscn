@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://nfaewv8ptccv"]
+[gd_scene load_steps=4 format=3 uid="uid://nfaewv8ptccv"]
 
 [ext_resource type="Script" path="res://scenes/lobby.gd" id="1_u7y87"]
+[ext_resource type="Theme" uid="uid://cpxywnscvet3h" path="res://styles/label-backgrounds.tres" id="2_8x5tc"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_au2ch"]
+properties/0/path = NodePath("LobbyGridContainer/PlayersCountLabel:text")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("LobbyGridContainer/MatchesCountLabel:text")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -31,8 +40,46 @@ size_flags_vertical = 3
 text = "⌛Waiting for opponent
 (click to cancel)"
 
+[node name="LobbyGridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -271.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 58.0
+grow_horizontal = 0
+theme = ExtResource("2_8x5tc")
+columns = 2
+
+[node name="PlayersInfoLabel" type="Label" parent="LobbyGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Players Waiting for Match"
+horizontal_alignment = 2
+
+[node name="PlayersCountLabel" type="Label" parent="LobbyGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "##/##"
+
+[node name="MatchesInfoLabel" type="Label" parent="LobbyGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ongoing Matches"
+horizontal_alignment = 2
+
+[node name="MatchesCountLabel" type="Label" parent="LobbyGridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "##/##"
+
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_au2ch")
 
 [connection signal="pressed" from="CancelJoinButton" to="." method="_on_cancel_join_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

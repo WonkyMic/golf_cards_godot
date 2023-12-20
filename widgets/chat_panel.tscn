@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://widgets/chat_panel.gd" id="1_utpp1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b6ebs"]
-properties/0/path = NodePath("GridContainer/Panel/RichTextLabel:text")
+properties/0/path = NodePath("GridContainer/ChatHistoryBackground/ChatHistoryPanel:text")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
@@ -22,12 +22,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="GridContainer"]
+[node name="ChatHistoryBackground" type="Panel" parent="GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="GridContainer/Panel"]
+[node name="ChatHistoryPanel" type="RichTextLabel" parent="GridContainer/ChatHistoryBackground"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -53,7 +53,7 @@ tooltip_text = "Unroll to Fullscreen"
 toggle_mode = true
 text = "🗞️"
 
-[node name="TextEdit" type="TextEdit" parent="GridContainer/GridContainer"]
+[node name="TextEntryField" type="TextEdit" parent="GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14

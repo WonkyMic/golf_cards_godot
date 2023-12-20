@@ -1,7 +1,6 @@
 extends Control
 class_name Match
 
-@onready var global := get_node("/root/Global")
 @onready var chat_panel := $ChatPanel
 
 

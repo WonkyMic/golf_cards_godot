@@ -1,47 +1,50 @@
 extends Control
 class_name Lobby
 
-const DEFAULT_IP := "localhost"  # TODO: update to point to server
-const DEFAULT_PORT := 2650
-const DEFAULT_MAX_CLIENTS := 33
-const ENV_DEBUG_PROJECT_PATH = "GOLF_DEBUG_PROJECT_PATH"
+const PLAYERS_COUNT_FORMAT := "%d/%d"
+const MATCHES_COUNT_FORMAT := "%d/%d"
 
 @export_file("*.tscn") var menu_scene: String
 @export_file("*.tscn") var game_scene: String
 
 var ports_to_pids := {}  # considered the game slots this server can support
 var players := []  # players queue to ensure they match up in order
+var active_match_count := 0  # number of active matches
 
-@onready var global := get_node("/root/Global")
+@onready var players_count_label := $LobbyGridContainer/PlayersCountLabel
+@onready var matches_count_label := $LobbyGridContainer/MatchesCountLabel
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if global.is_lobby:
+	if Global.is_lobby:
 		host_lobby()
 	else:
 		join_lobby()
 
 
-func host_lobby(port: int = DEFAULT_PORT, max_clients: int = DEFAULT_MAX_CLIENTS) -> void:
+func host_lobby() -> void:
 	var peer := ENetMultiplayerPeer.new()
-	peer.create_server(port, max_clients)
+	peer.create_server(Global.lobby_port, Global.lobby_max_clients + 1)  # +1 so lobby server has a seat as well
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		print("failed to start multiplayer lobby server")
 		get_tree().quit()
 	multiplayer.multiplayer_peer = peer
 
-	# TODO: read range (possibly even explicit ports) from configs file or via CLI args
-	for offset: int in range(1, 2):  # TODO: add more ports
-		ports_to_pids[DEFAULT_PORT + offset] = -1
+	# initialize port list
+	for port: int in Global.lobby_game_ports:
+		ports_to_pids[port] = -1
+
+	_refresh_players_count_label()
+	_refresh_matches_count_label()
 
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 
 
-func join_lobby(ip_address: String = DEFAULT_IP, port: int = DEFAULT_PORT) -> void:
+func join_lobby() -> void:
 	var peer := ENetMultiplayerPeer.new()
-	peer.create_client(ip_address, port)
+	peer.create_client(Global.lobby_ip, Global.lobby_port)
 	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		OS.alert("Failed to start multiplayer client")
 		return_to_main_menu()
@@ -66,6 +69,7 @@ func _on_cancel_join_button_pressed() -> void:
 
 func _on_player_connected(id: int) -> void:
 	players.append(id)
+	_refresh_players_count_label()
 	print("player %d connected; %d players waiting for match" % [id, players.size()])
 
 
@@ -73,6 +77,7 @@ func _on_player_disconnected(id: int) -> void:
 	var index := players.find(id)
 	if index > -1:
 		players.remove_at(index)
+		_refresh_players_count_label()
 		print("player %d disconnected; %d players still waiting for match" % [id, players.size()])
 	else:
 		print(
@@ -81,6 +86,14 @@ func _on_player_disconnected(id: int) -> void:
 				% [id, players.size()]
 			)
 		)
+
+
+func _refresh_players_count_label() -> void:
+	players_count_label.text = PLAYERS_COUNT_FORMAT % [players.size(), Global.lobby_max_clients]
+
+
+func _refresh_matches_count_label() -> void:
+	matches_count_label.text = MATCHES_COUNT_FORMAT % [active_match_count, ports_to_pids.size()]
 
 
 func _on_connected_fail() -> void:
@@ -112,8 +125,8 @@ func _on_timer_timeout() -> void:
 	# TODO: wait a moment to give service time to start up?
 
 	print("starting match on port %d between players %d and %d" % [port, player1_id, player2_id])
-	_join_match.rpc_id(player1_id, DEFAULT_IP, port, token)
-	_join_match.rpc_id(player2_id, DEFAULT_IP, port, token)
+	_join_match.rpc_id(player1_id, Global.lobby_ip, port, token, "with %d" % player2_id)  # TODO: update with player name
+	_join_match.rpc_id(player2_id, Global.lobby_ip, port, token, "with %d" % player1_id)  # TODO: update with player name
 
 
 func _free_unused_ports() -> void:
@@ -122,6 +135,8 @@ func _free_unused_ports() -> void:
 		if pid != -1 and !OS.is_process_running(pid):
 			print("pid %d stopped; freeing port %d for future matches" % [pid, port])
 			ports_to_pids[port] = -1
+			active_match_count -= 1
+			_refresh_matches_count_label()
 
 
 func _not_enough_players_for_match() -> bool:
@@ -137,24 +152,29 @@ func _get_free_port() -> int:
 
 func _provision_match(port: int, token: String = "") -> void:
 	var args := []
-	if OS.has_environment(ENV_DEBUG_PROJECT_PATH):
-		args += ["--path", OS.get_environment(ENV_DEBUG_PROJECT_PATH)]
+	if OS.has_environment(Global.debug_project_path):
+		args += ["--path", OS.get_environment(Global.debug_project_path)]
 
-	args += ["--headless", "--game", "--port", port]
+	args += ["--headless", "--game", Global.SERVER_PORT_FLAG, port]
 	if not token.is_empty():
-		args += ["--password", token]
+		args += [Global.SERVER_PASSWORD_FLAG, token]
 
 	var pid := OS.create_process(OS.get_executable_path(), args)
 	ports_to_pids[port] = pid
 
+	active_match_count += 1
+	_refresh_matches_count_label()
+
 
 @rpc("call_remote", "reliable")
-func _join_match(ip_address: String, port: int, token: String = "") -> void:
-	global.is_game_host = false
-	global.ip_address = ip_address
-	global.port = port
-	global.password = token
-	#global.server_name = server_name # TODO: include?
+func _join_match(
+	ip_address: String, port: int, token: String = "", server_name: String = ""
+) -> void:
+	Global.is_game_host = false
+	Global.server_ip = ip_address
+	Global.server_port = port
+	Global.server_password = token
+	Global.server_name = server_name
 
 	multiplayer.multiplayer_peer = null  # safely disconnect from lobby
 	get_tree().change_scene_to_file(game_scene)
@@ -163,11 +183,11 @@ func _join_match(ip_address: String, port: int, token: String = "") -> void:
 # TODO: remove (unused)
 func _spawn_game_and_block() -> void:
 	var result: int
-	if OS.has_environment(ENV_DEBUG_PROJECT_PATH):
+	if OS.has_environment(Global.DEFAULT_FILENAME):
 		print(
 			(
 				"program executing from %s with project path of %s"
-				% [OS.get_executable_path(), OS.get_environment(ENV_DEBUG_PROJECT_PATH)]
+				% [OS.get_executable_path(), OS.get_environment(Global.DEFAULT_FILENAME)]
 			)
 		)
 
@@ -176,7 +196,7 @@ func _spawn_game_and_block() -> void:
 		# OS.is_process_running(int)
 		result = OS.execute(
 			OS.get_executable_path(),
-			["--path", OS.get_environment(ENV_DEBUG_PROJECT_PATH), "--headless", "--game"],
+			["--path", OS.get_environment(Global.DEFAULT_FILENAME), "--headless", "--game"],
 			[],
 			true
 		)

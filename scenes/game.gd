@@ -14,7 +14,6 @@ var expected_player_count := 2
 var players_ready := {}
 var game_has_started := false
 
-@onready var global := get_node("/root/Global")
 @onready var board := $Board
 @onready var cancel_button := $GridContainer/CancelJoinButton
 @onready var kick_button := $GridContainer/KickButton
@@ -25,16 +24,16 @@ var game_has_started := false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	multiplayer.server_relay = false  # save bandwith by disabling server relay & peer notifications
-	global.is_multiplayer = true
+	Global.is_multiplayer = true
 
 	# TODO: add timer that auto-closes game service if no players join within maybe 3 minutes
 
 	# Remote Hosted Game Configuration
 	if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
-		global.is_game_host = true
-		read_cli_args()
+		Global.is_game_host = true
+		Global.consume_server_cli_args()
 		expected_player_count = 3  # include dedicated server sitting between the two contestants
-		host(global.port)
+		host(Global.server_port)
 		return
 
 	# Local Game Configuration
@@ -44,31 +43,12 @@ func _ready() -> void:
 	password_line.visible = false
 	submit_button.visible = false
 
-	if global.is_game_host:
+	if Global.is_game_host:
 		expected_player_count = 2
-		host(global.port)
+		host(Global.server_port)
 	else:
 		set_default_button_text()
-		join(global.ip_address, global.port)
-
-
-func read_cli_args() -> void:
-	var key := ""
-	for arg: String in OS.get_cmdline_args():
-		if arg.begins_with("--"):
-			key = arg
-		else:
-			match key:
-				"ip_address":
-					global.ip_address = arg
-				"--port":
-					global.port = arg
-				"--password":
-					global.password = arg
-			key = ""
-
-	if global.ip_address.is_empty():
-		global.ip_address = Lobby.DEFAULT_IP  # TODO: maybe require this instead?
+		join(Global.server_ip, Global.server_port)
 
 
 func host(port: int) -> void:
@@ -118,18 +98,18 @@ func return_to_main_menu() -> void:
 
 
 func set_default_button_text() -> void:
-	if global.server_name.length() > 0:
-		cancel_button.text = CANCEL_BUTTON_NAME_FORMAT % global.server_name
+	if Global.server_name.length() > 0:
+		cancel_button.text = CANCEL_BUTTON_NAME_FORMAT % Global.server_name
 	else:
-		cancel_button.text = CANCEL_BUTTON_ADDRESS_FORMAT % [global.ip_address, global.port]
+		cancel_button.text = CANCEL_BUTTON_ADDRESS_FORMAT % [Global.server_ip, Global.server_port]
 
 
 # request password from opponent
 @rpc("call_remote", "reliable")
 func request_password() -> void:
-	if not global.password.is_empty():
-		submit_password.rpc_id(0, global.password)
-		global.password = ""  # TODO: should we retry this a few times before immediately flushing?
+	if not Global.server_password.is_empty():
+		submit_password.rpc_id(0, Global.server_password)
+		Global.server_password = ""  # TODO: should we retry this a few times before immediately flushing?
 		return
 
 	cancel_button.text = CANCEL_BUTTON_BACK_TO_MENU
@@ -142,7 +122,7 @@ func request_password() -> void:
 # submit password to host
 @rpc("any_peer", "call_remote", "reliable")
 func submit_password(password: String) -> void:
-	if global.password == password:
+	if Global.server_password == password:
 		players_ready[multiplayer.get_remote_sender_id()] = true
 		load_game_if_ready()
 	else:
@@ -183,9 +163,9 @@ func _on_cancel_join_button_pressed() -> void:
 
 
 func _on_player_connected(id: int) -> void:
-	print("player %d connected to game service on port %d" % [id, global.port])
+	print("player %d connected to game service on port %d" % [id, Global.server_port])
 	players_ready[id] = false
-	if global.password.length() > 0:
+	if Global.server_password.length() > 0:
 		cancel_button.text = CANCEL_BUTTON_WAITING_FOR_PASSWORD
 		kick_button.visible = true
 		request_password.rpc_id(id)
@@ -195,7 +175,7 @@ func _on_player_connected(id: int) -> void:
 
 
 func _on_player_disconnected(id: int) -> void:
-	print("player %d disconnected from game service on port %d" % [id, global.port])
+	print("player %d disconnected from game service on port %d" % [id, Global.server_port])
 	if game_has_started:
 		# TODO: alert other player and add a timer to provide opportunity for same client to reconnect
 		#  and wait until expired before shutting down
